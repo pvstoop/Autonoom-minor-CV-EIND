@@ -1,0 +1,8 @@
+moer
+ring
+inbusbout
+zeskantbout
+slotbout
+knopschroef
+insteekkoppeling
+koppelbus

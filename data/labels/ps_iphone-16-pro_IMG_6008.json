@@ -1,0 +1,419 @@
+{
+ "image": "ps_iphone-16-pro_IMG_6008.jpg",
+ "width": 1536,
+ "height": 2048,
+ "objects": [
+  {
+   "class": "zeskantbout",
+   "shape": "obb",
+   "center": [
+    799.5,
+    70.5
+   ],
+   "size": [
+    487.47,
+    95.0
+   ],
+   "angle": 174.231,
+   "head": [
+    1042.0,
+    46.0
+   ],
+   "occluded": true
+  },
+  {
+   "class": "zeskantbout",
+   "shape": "obb",
+   "center": [
+    667.5,
+    7.0
+   ],
+   "size": [
+    185.53,
+    30.0
+   ],
+   "angle": 175.672,
+   "head": [
+    760.0,
+    0.0
+   ],
+   "occluded": true
+  },
+  {
+   "class": "ring",
+   "shape": "obb",
+   "center": [
+    1106.0,
+    141.0
+   ],
+   "size": [
+    195.0,
+    195.0
+   ],
+   "angle": 0.0
+  },
+  {
+   "class": "ring",
+   "shape": "obb",
+   "center": [
+    1408.0,
+    133.0
+   ],
+   "size": [
+    138.0,
+    138.0
+   ],
+   "angle": 0.0
+  },
+  {
+   "class": "ring",
+   "shape": "obb",
+   "center": [
+    1437.0,
+    285.0
+   ],
+   "size": [
+    135.0,
+    135.0
+   ],
+   "angle": 0.0
+  },
+  {
+   "class": "ring",
+   "shape": "obb",
+   "center": [
+    1398.0,
+    430.0
+   ],
+   "size": [
+    138.0,
+    138.0
+   ],
+   "angle": 0.0
+  },
+  {
+   "class": "ring",
+   "shape": "obb",
+   "center": [
+    1425.0,
+    617.0
+   ],
+   "size": [
+    138.0,
+    138.0
+   ],
+   "angle": 0.0
+  },
+  {
+   "class": "koppelbus",
+   "shape": "obb",
+   "center": [
+    1088.0,
+    430.0
+   ],
+   "size": [
+    210.0,
+    130.0
+   ],
+   "angle": 0.0
+  },
+  {
+   "class": "koppelbus",
+   "shape": "obb",
+   "center": [
+    1064.5,
+    585.5
+   ],
+   "size": [
+    229.68,
+    125.0
+   ],
+   "angle": -13.855
+  },
+  {
+   "class": "slotbout",
+   "shape": "obb",
+   "center": [
+    876.5,
+    797.5
+   ],
+   "size": [
+    903.03,
+    105.0
+   ],
+   "angle": -179.556,
+   "head": [
+    1328.0,
+    801.0
+   ]
+  },
+  {
+   "class": "zeskantbout",
+   "shape": "obb",
+   "center": [
+    464.0,
+    1100.0
+   ],
+   "size": [
+    223.52,
+    85.0
+   ],
+   "angle": -173.32,
+   "head": [
+    575.0,
+    1113.0
+   ]
+  },
+  {
+   "class": "ring",
+   "shape": "obb",
+   "center": [
+    725.0,
+    1157.0
+   ],
+   "size": [
+    220.0,
+    220.0
+   ],
+   "angle": 0.0
+  },
+  {
+   "class": "inbusbout",
+   "shape": "obb",
+   "center": [
+    402.5,
+    1249.0
+   ],
+   "size": [
+    341.47,
+    128.0
+   ],
+   "angle": -176.978,
+   "head": [
+    573.0,
+    1258.0
+   ]
+  },
+  {
+   "class": "inbusbout",
+   "shape": "obb",
+   "center": [
+    395.0,
+    1414.0
+   ],
+   "size": [
+    340.09,
+    145.0
+   ],
+   "angle": 178.652,
+   "head": [
+    565.0,
+    1410.0
+   ]
+  },
+  {
+   "class": "inbusbout",
+   "shape": "obb",
+   "center": [
+    429.5,
+    1516.0
+   ],
+   "size": [
+    338.52,
+    115.0
+   ],
+   "angle": -174.576,
+   "head": [
+    598.0,
+    1532.0
+   ],
+   "occluded": true
+  },
+  {
+   "class": "inbusbout",
+   "shape": "obb",
+   "center": [
+    506.0,
+    1606.0
+   ],
+   "size": [
+    336.21,
+    130.0
+   ],
+   "angle": -177.955,
+   "head": [
+    674.0,
+    1612.0
+   ]
+  },
+  {
+   "class": "insteekkoppeling",
+   "shape": "obb",
+   "center": [
+    982.5,
+    1189.5
+   ],
+   "size": [
+    127.66,
+    75.0
+   ],
+   "angle": 174.155,
+   "head": [
+    1046.0,
+    1183.0
+   ]
+  },
+  {
+   "class": "insteekkoppeling",
+   "shape": "obb",
+   "center": [
+    1075.0,
+    1239.0
+   ],
+   "size": [
+    110.16,
+    75.0
+   ],
+   "angle": 164.197,
+   "head": [
+    1128.0,
+    1224.0
+   ]
+  },
+  {
+   "class": "insteekkoppeling",
+   "shape": "obb",
+   "center": [
+    1007.5,
+    1341.5
+   ],
+   "size": [
+    119.1,
+    80.0
+   ],
+   "angle": -164.914,
+   "head": [
+    1065.0,
+    1357.0
+   ]
+  },
+  {
+   "class": "insteekkoppeling",
+   "shape": "obb",
+   "center": [
+    957.5,
+    1425.0
+   ],
+   "size": [
+    186.07,
+    100.0
+   ],
+   "angle": -152.471,
+   "head": [
+    1040.0,
+    1468.0
+   ]
+  },
+  {
+   "class": "knopschroef",
+   "shape": "obb",
+   "center": [
+    963.0,
+    1626.0
+   ],
+   "size": [
+    246.33,
+    58.0
+   ],
+   "angle": 169.237,
+   "head": [
+    1084.0,
+    1603.0
+   ]
+  },
+  {
+   "class": "zeskantbout",
+   "shape": "obb",
+   "center": [
+    955.0,
+    1699.5
+   ],
+   "size": [
+    241.99,
+    62.0
+   ],
+   "angle": -172.64,
+   "head": [
+    1075.0,
+    1715.0
+   ]
+  },
+  {
+   "class": "moer",
+   "shape": "obb",
+   "center": [
+    1260.0,
+    1536.0
+   ],
+   "size": [
+    138.0,
+    138.0
+   ],
+   "angle": 0.0
+  },
+  {
+   "class": "moer",
+   "shape": "obb",
+   "center": [
+    1352.0,
+    1459.0
+   ],
+   "size": [
+    138.0,
+    138.0
+   ],
+   "angle": 0.0
+  },
+  {
+   "class": "moer",
+   "shape": "obb",
+   "center": [
+    1469.0,
+    1500.0
+   ],
+   "size": [
+    138.0,
+    138.0
+   ],
+   "angle": 0.0,
+   "occluded": true
+  },
+  {
+   "class": "moer",
+   "shape": "obb",
+   "center": [
+    1357.0,
+    1592.0
+   ],
+   "size": [
+    138.0,
+    138.0
+   ],
+   "angle": 0.0
+  },
+  {
+   "class": "ring",
+   "shape": "obb",
+   "center": [
+    1140.0,
+    14.0
+   ],
+   "size": [
+    125.0,
+    28.0
+   ],
+   "angle": 0.0,
+   "occluded": true
+  }
+ ]
+}

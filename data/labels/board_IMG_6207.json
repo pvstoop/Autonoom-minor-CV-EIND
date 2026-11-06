@@ -1,0 +1,444 @@
+{
+ "image": "board_IMG_6207.jpg",
+ "width": 2048,
+ "height": 1536,
+ "objects": [
+  {
+   "class": "ring",
+   "shape": "obb",
+   "center": [
+    517.0,
+    558.0
+   ],
+   "size": [
+    135.0,
+    62.0
+   ],
+   "angle": -3.0
+  },
+  {
+   "class": "inbusbout",
+   "shape": "obb",
+   "center": [
+    683.0,
+    542.0
+   ],
+   "size": [
+    222.0,
+    86.0
+   ],
+   "angle": 19.0,
+   "head": [
+    578.05,
+    505.86
+   ]
+  },
+  {
+   "class": "ring",
+   "shape": "obb",
+   "center": [
+    663.0,
+    538.0
+   ],
+   "size": [
+    140.0,
+    40.0
+   ],
+   "angle": 130.0
+  },
+  {
+   "class": "slotbout",
+   "shape": "obb",
+   "center": [
+    707.0,
+    771.0
+   ],
+   "size": [
+    495.0,
+    135.0
+   ],
+   "angle": -128.0,
+   "head": [
+    859.38,
+    966.03
+   ]
+  },
+  {
+   "class": "ring",
+   "shape": "obb",
+   "center": [
+    780.0,
+    873.0
+   ],
+   "size": [
+    264.0,
+    234.0
+   ],
+   "angle": 36.0
+  },
+  {
+   "class": "zeskantbout",
+   "shape": "obb",
+   "center": [
+    851.0,
+    775.0
+   ],
+   "size": [
+    422.0,
+    132.0
+   ],
+   "angle": 48.5,
+   "head": [
+    711.19,
+    616.97
+   ]
+  },
+  {
+   "class": "moer",
+   "shape": "obb",
+   "center": [
+    800.0,
+    705.0
+   ],
+   "size": [
+    165.0,
+    75.0
+   ],
+   "angle": -41.5
+  },
+  {
+   "class": "inbusbout",
+   "shape": "obb",
+   "center": [
+    1043.0,
+    628.0
+   ],
+   "size": [
+    232.0,
+    88.0
+   ],
+   "angle": -170.5,
+   "head": [
+    1157.41,
+    647.15
+   ]
+  },
+  {
+   "class": "slotbout",
+   "shape": "obb",
+   "center": [
+    968.0,
+    488.0
+   ],
+   "size": [
+    222.0,
+    105.0
+   ],
+   "angle": -122.0,
+   "head": [
+    1026.82,
+    582.13
+   ]
+  },
+  {
+   "class": "ring",
+   "shape": "obb",
+   "center": [
+    970.0,
+    492.0
+   ],
+   "size": [
+    175.0,
+    58.0
+   ],
+   "angle": -8.0
+  },
+  {
+   "class": "zeskantbout",
+   "shape": "obb",
+   "center": [
+    1107.0,
+    466.0
+   ],
+   "size": [
+    135.0,
+    48.0
+   ],
+   "angle": 12.0,
+   "head": [
+    1040.98,
+    451.97
+   ]
+  },
+  {
+   "class": "insteekkoppeling",
+   "shape": "obb",
+   "center": [
+    1070.0,
+    493.0
+   ],
+   "size": [
+    85.0,
+    62.0
+   ],
+   "angle": 145.0,
+   "head": [
+    1104.81,
+    468.62
+   ]
+  },
+  {
+   "class": "zeskantbout",
+   "shape": "obb",
+   "center": [
+    1203.0,
+    470.0
+   ],
+   "size": [
+    65.0,
+    36.0
+   ],
+   "angle": 145.0,
+   "head": [
+    1229.62,
+    451.36
+   ]
+  },
+  {
+   "class": "koppelbus",
+   "shape": "obb",
+   "center": [
+    1120.0,
+    542.0
+   ],
+   "size": [
+    180.0,
+    100.0
+   ],
+   "angle": -22.0
+  },
+  {
+   "class": "koppelbus",
+   "shape": "obb",
+   "center": [
+    1262.0,
+    598.0
+   ],
+   "size": [
+    180.0,
+    112.0
+   ],
+   "angle": 90.0
+  },
+  {
+   "class": "insteekkoppeling",
+   "shape": "obb",
+   "center": [
+    1193.0,
+    600.0
+   ],
+   "size": [
+    52.0,
+    65.0
+   ],
+   "angle": 0.0
+  },
+  {
+   "class": "inbusbout",
+   "shape": "obb",
+   "center": [
+    1257.0,
+    708.0
+   ],
+   "size": [
+    290.0,
+    98.0
+   ],
+   "angle": 165.0,
+   "head": [
+    1397.06,
+    670.47
+   ]
+  },
+  {
+   "class": "inbusbout",
+   "shape": "obb",
+   "center": [
+    1256.0,
+    866.0
+   ],
+   "size": [
+    272.0,
+    106.0
+   ],
+   "angle": 91.0,
+   "head": [
+    1258.37,
+    730.02
+   ]
+  },
+  {
+   "class": "insteekkoppeling",
+   "shape": "obb",
+   "center": [
+    1117.0,
+    875.0
+   ],
+   "size": [
+    212.0,
+    100.0
+   ],
+   "angle": 1.0,
+   "head": [
+    1011.02,
+    873.15
+   ]
+  },
+  {
+   "class": "zeskantbout",
+   "shape": "obb",
+   "center": [
+    1411.0,
+    525.0
+   ],
+   "size": [
+    372.0,
+    92.0
+   ],
+   "angle": -164.3,
+   "head": [
+    1590.06,
+    575.33
+   ]
+  },
+  {
+   "class": "ring",
+   "shape": "obb",
+   "center": [
+    1494.0,
+    458.0
+   ],
+   "size": [
+    135.0,
+    60.0
+   ],
+   "angle": 3.0
+  },
+  {
+   "class": "moer",
+   "shape": "obb",
+   "center": [
+    1613.0,
+    525.0
+   ],
+   "size": [
+    108.0,
+    85.0
+   ],
+   "angle": 0.0
+  },
+  {
+   "class": "zeskantbout",
+   "shape": "obb",
+   "center": [
+    1663.0,
+    748.0
+   ],
+   "size": [
+    490.0,
+    120.0
+   ],
+   "angle": 42.5,
+   "head": [
+    1482.37,
+    582.48
+   ]
+  },
+  {
+   "class": "moer",
+   "shape": "obb",
+   "center": [
+    1468.0,
+    703.0
+   ],
+   "size": [
+    135.0,
+    108.0
+   ],
+   "angle": 0.0
+  },
+  {
+   "class": "moer",
+   "shape": "obb",
+   "center": [
+    1575.0,
+    973.0
+   ],
+   "size": [
+    178.0,
+    158.0
+   ],
+   "angle": 0.0
+  },
+  {
+   "class": "ring",
+   "shape": "obb",
+   "center": [
+    1925.0,
+    766.0
+   ],
+   "size": [
+    246.0,
+    132.0
+   ],
+   "angle": 5.0
+  },
+  {
+   "class": "ring",
+   "shape": "obb",
+   "center": [
+    481.0,
+    963.0
+   ],
+   "size": [
+    210.0,
+    135.0
+   ],
+   "angle": -10.0
+  },
+  {
+   "class": "insteekkoppeling",
+   "shape": "obb",
+   "center": [
+    600.0,
+    848.0
+   ],
+   "size": [
+    125.0,
+    85.0
+   ],
+   "angle": -12.0,
+   "head": [
+    538.87,
+    860.99
+   ]
+  },
+  {
+   "class": "insteekkoppeling",
+   "shape": "obb",
+   "center": [
+    1012.0,
+    727.0
+   ],
+   "size": [
+    125.0,
+    65.0
+   ],
+   "angle": 175.0,
+   "head": [
+    1074.26,
+    721.55
+   ]
+  }
+ ]
+}
