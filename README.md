@@ -54,4 +54,5 @@ Resultaten tot nu toe (mAP50)
 | RF-DETR OBB | eigen | 96.0 | 76.9 ± 1.8 |
 | RF-DETR OBB | eigen + dambord | 94.1 | 94.4 ± 0.9 |
 
+Gemeten in CV-EIND, gemiddeld over 4 folds.
 
