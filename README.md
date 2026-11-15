@@ -45,6 +45,19 @@ Foto's toevoegen
 2. Zet de naam in data/split.yaml. Foto's van dezelfde opstelling horen in dezelfde groep.
 3. Draai prepare_data.py opnieuw en train opnieuw.
 
+CVAT
+
+Labels naar en van cvat (zet CVAT_URL, CVAT_USER en CVAT_PASSWORD, of hij vraagt erom):
+
+```bash
+uv run python scripts/cvat_labels.py push --split test
+uv run python scripts/cvat_labels.py pull
+```
+
+Of met bestanden: `export` en `import` (CVAT for images 1.1).
+
+Kop = punt met label `kop`, gewoon ergens bij de kop klikken binnen de box, script fixt de rest.
+
 Resultaten tot nu toe (mAP50)
 
 | Model | Getraind op | Eigen foto's | Dambord, nieuwe opstellingen |
