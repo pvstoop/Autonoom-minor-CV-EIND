@@ -1,4 +1,5 @@
-# Vaste verdeling. Dambordfoto's zijn op opstelling verdeeld: train en test delen nooit dezelfde opstelling.
+# Vaste verdeling. Dambordfoto's zijn op opstelling verdeeld: train, val en test delen nooit dezelfde opstelling.
+# train: eigen foto's + dambord A-B. val (om te kiezen): 2 eigen + dambord C. test (alleen voor het eindcijfer): 6 eigen + dambord D-E.
 train:
 - ps_iphone-16-pro_IMG_6003
 - ps_iphone-16-pro_IMG_6004
@@ -31,14 +32,14 @@ train:
 - board_IMG_6219
 - board_IMG_6220
 - board_IMG_6221
+val:
+- ps_iphone-16-pro_IMG_6002
+- ps_iphone-16-pro_IMG_6012
 - board_IMG_6222
 - board_IMG_6223
 - board_IMG_6224
 - board_IMG_6225
 - board_IMG_6226
-val:
-- ps_iphone-16-pro_IMG_6002
-- ps_iphone-16-pro_IMG_6012
 test:
 - ps_iphone-16-pro_IMG_6001
 - ps_iphone-16-pro_IMG_6005

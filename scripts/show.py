@@ -10,6 +10,7 @@ from common import IMAGES, ROOT, draw, load_classes, load_label
 
 
 def main() -> None:
+    """Teken de labels van de gevraagde foto's."""
     ap = argparse.ArgumentParser()
     ap.add_argument("stems", nargs="+", help="fotonamen zonder extensie")
     args = ap.parse_args()
@@ -17,7 +18,8 @@ def main() -> None:
     out.mkdir(parents=True, exist_ok=True)
     for stem in args.stems:
         img = cv2.imread(str(IMAGES / f"{stem}.jpg"))
-        cv2.imwrite(str(out / f"{stem}.jpg"), draw(img, load_label(stem)["objects"], load_classes()))
+        objects = load_label(stem)["objects"]
+        cv2.imwrite(str(out / f"{stem}.jpg"), draw(img, objects, load_classes()))
         print(out / f"{stem}.jpg")
 
 

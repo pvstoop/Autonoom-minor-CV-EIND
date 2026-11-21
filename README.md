@@ -1,28 +1,45 @@
-# CV-NN: onderdelen detecteren met een neuraal netwerk
+# CV-EIND: onderdelen detecteren met YOLO-OBB
 
-Zoeken 8 classes in images.
+Zoekt 8 soorten onderdelen in een foto: waar ligt het (geroteerde box), hoe ligt het (hoek, en bij bouten aan welke
+kant de kop zit) en wat is het. Met YOLO11-OBB.
 
-[uv](https://docs.astral.sh/uv/) is nodig
+Wat ik heb geprobeerd en wat eruit kwam staat in [docs/experimenten.md](docs/experimenten.md).
+Welke foto's er zijn en hoe ze verdeeld zijn staat in [docs/dataset.md](docs/dataset.md).
+
+[uv](https://docs.astral.sh/uv/) is nodig; die installeert zelf Python 3.14 en de pakketten.
+
+Het getrainde model staat in `models/` (via Git LFS: eerst `git lfs install` en `git lfs pull`). Testen:
 
 ```bash
 uv sync
-uv run python scripts/prepare_data.py
+uv run python scripts/prepare_data.py                               # labels -> data/yolo
+uv run python scripts/evaluate.py models/yolo11m_obb.pt            # scores + tekeningen in runs/pred/
+```
 
-uv run python scripts/train_yolo.py --name eerste
-uv run python scripts/evaluate.py runs/yolo/eerste/weights/best.pt
+Zelf trainen:
 
-uv run python scripts/train_rfdetr.py --name eerste
-uv run python scripts/evaluate.py runs/rfdetr/eerste/checkpoint_final.pth
+```bash
+uv run python scripts/train_yolo.py --name m --model yolo11m-obb.pt
+uv run python scripts/evaluate.py runs/yolo/m/weights/best.pt
 ```
 
 | Path | Inhoud |
 |---|---|
 | `data/images/` | 75 foto's: 19 op een egale ondergrond (`ps_...`), 56 op een dambord (`board_...`) |
 | `data/labels/` | Eén JSON-bestand per foto |
-| `data/split.yaml` | Welke foto in train, val of test zit: 36, 2 en 37 |
+| `data/split.yaml` | Welke foto in train, val of test zit: 31, 7 en 37 |
+| `models/` | Het getrainde model |
 | `classes.txt` | De 8 klassen |
-| `scripts/` | Data klaarzetten, trainen, testen en labels tekenen |
-| `third_party/rf-detr/` | RF-DETR met onze OBB-kop; hier hoef je meestal niets aan te doen |
+| `scripts/` | Data klaarzetten, trainen, testen, labels tekenen en de grafieken maken |
+| `results/` | De cijfers achter de grafieken in het logboek |
+
+Hoe het werkt
+
+- `prepare_data.py` zet de labels om naar YOLO. Bij elke bout en koppeling komt een kleine box `kop` op de kop, als 9e klasse.
+- `train_yolo.py` traint YOLO11-OBB, met draaien, spiegelen, helderheid en kleur als augmentatie.
+- `evaluate.py` voorspelt de testfoto's (met `--val` de val-foto's), koppelt elke gevonden kop aan het dichtstbijzijnde
+  uiteinde van een bout, en print mAP50, F1, de hoekfout en hoe vaak de kop goed zit, apart voor de egale ondergrond en het
+  dambord. Kies instellingen op val, en gebruik test alleen voor het eindcijfer.
 
 Labels
 
@@ -36,8 +53,7 @@ Labels
 - occluded: true betekent dat het onderdeel niet helemaal zichtbaar is.
 - _negeer is geen klasse maar een gebied dat niet meetelt, bijvoorbeeld een onderdeel dat te ver bedekt is om te herkennen.
 
-
-ZIe labels met: uv run python scripts/show.py board_IMG_6241 (voorbeeld in runs/labels/).
+Zie labels met `uv run python scripts/show.py board_IMG_6241` (tekening in runs/labels/).
 
 Foto's toevoegen
 
@@ -45,27 +61,11 @@ Foto's toevoegen
 2. Zet de naam in data/split.yaml. Foto's van dezelfde opstelling horen in dezelfde groep.
 3. Draai prepare_data.py opnieuw en train opnieuw.
 
-CVAT
+Resultaat (testset, gemiddeld over 3 keer trainen)
 
-Labels naar en van cvat (zet CVAT_URL, CVAT_USER en CVAT_PASSWORD, of hij vraagt erom):
-
-```bash
-uv run python scripts/cvat_labels.py push --split test
-uv run python scripts/cvat_labels.py pull
-```
-
-Of met bestanden: `export` en `import` (CVAT for images 1.1).
-
-Kop = punt met label `kop`, gewoon ergens bij de kop klikken binnen de box, script fixt de rest.
-
-Resultaten tot nu toe (mAP50)
-
-| Model | Getraind op | Eigen foto's | Dambord, nieuwe opstellingen |
+| | mAP50 | F1 | Kop goed |
 |---|---|---|---|
-| YOLO11m | eigen | 91.4 | 47.3 ± 4.4 |
-| YOLO11m | eigen + dambord | 88.6 | 86.6 ± 3.1 |
-| RF-DETR OBB | eigen | 96.0 | 76.9 ± 1.8 |
-| RF-DETR OBB | eigen + dambord | 94.1 | 94.4 ± 0.9 |
+| Egale ondergrond | 94.6 ± 1.5 | 95.7 | 96% |
+| Dambord, nieuwe opstellingen | 86.8 ± 0.7 | 89.2 | 95% |
 
-Gemeten in CV-EIND, gemiddeld over 4 folds.
-
+Het model in `models/` is 1 van die 3 keer: 96.3 op de egale ondergrond en 86.1 op het dambord.

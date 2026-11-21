@@ -1,0 +1,7 @@
+instelling,map50
+basis (YOLO11m),97.4
+zonder kop-klasse,97.8
+YOLO11x (groter),97.6
+YOLO11s (kleiner),92.1
+zonder augmentatie,91.6
+zonder dambordfoto's,72.3

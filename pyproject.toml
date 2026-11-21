@@ -1,13 +1,13 @@
 [project]
-name = "cv-nn"
+name = "cv-eind"
 version = "0.1.0"
-description = ""
-requires-python = ">=3.12,<3.13"
+description = "Onderdelen detecteren en classificeren met YOLO-OBB"
+requires-python = ">=3.14"
 dependencies = [
+    "matplotlib>=3.9",
     "numpy>=2.0",
     "opencv-python>=4.10",
     "pyyaml>=6.0",
-    "rfdetr[augment,train]>=1.11.2",
     "scipy>=1.13",
     "torch>=2.5",
     "torchvision>=0.20",
@@ -18,11 +18,17 @@ dependencies = [
 package = false
 
 [[tool.uv.index]]
-name = "pytorch-cu124"
-url = "https://download.pytorch.org/whl/cu124"
+name = "pytorch-cu126"
+url = "https://download.pytorch.org/whl/cu126"
 explicit = true
 
 [tool.uv.sources]
-torch = { index = "pytorch-cu124" }
-torchvision = { index = "pytorch-cu124" }
-rfdetr = { path = "third_party/rf-detr", editable = true }
+torch = { index = "pytorch-cu126" }
+torchvision = { index = "pytorch-cu126" }
+
+[tool.ruff]
+line-length = 99  # PEP8: 79, of 99 als het team dat afspreekt
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "N", "D", "UP", "B"]
+ignore = ["D203", "D213", "D205", "D400", "D401", "D415"]  # regels voor Engelse zinnen

@@ -1,7 +1,7 @@
 .venv/
 __pycache__/
+.ruff_cache/
 runs/
 data/yolo/
-data/coco/
 *.pt
-*.pth
+!models/*.pt

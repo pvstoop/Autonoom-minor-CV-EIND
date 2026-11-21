@@ -1,12 +1,15 @@
-"""Zet data/labels om naar de formaten die de modellen willen: data/yolo en data/coco.
+"""Zet data/labels om naar het formaat van YOLO: data/yolo.
+
+    uv run python scripts/prepare_data.py
 
 Draai dit opnieuw als je labels of data/split.yaml aanpast.
 
-    uv run python scripts/prepare_data.py
+Naast de 8 onderdelen krijgt YOLO een 9e klasse `kop`: een kleine box op de kop van elke bout
+en koppeling. Zo leert YOLO waar de kop zit, en weet evaluate.py welke kant van een bout de
+kop is (de geroteerde box zelf zegt dat niet).
 """
 
 import argparse
-import json
 import shutil
 from pathlib import Path
 
@@ -14,88 +17,76 @@ import numpy as np
 import yaml
 from common import IGNORE, IMAGES, ROOT, SPLIT, load_classes, load_label, load_split, to_corners
 
+HEAD = "kop"
+
+
+def head_box(obj: dict) -> dict | None:
+    """Kleine box op de kop van een onderdeel, of None als het geen kop heeft.
+
+    In de labels is `head` het uiteinde aan de kopkant en wijst `angle` van de kop naar de punt.
+    De kop-box begint daar, is even breed als het onderdeel en hooguit zo lang als breed.
+    """
+    if "head" not in obj:
+        return None
+    length, width = obj["size"]
+    direction = np.radians(obj["angle"])
+    axis = np.array([np.cos(direction), np.sin(direction)])
+    size = min(width, 0.3 * length)
+    center = np.array(obj["head"]) + axis * size / 2
+    return {"class": HEAD, "center": center.tolist(), "size": [size, width], "angle": obj["angle"]}
+
+
+def label_lines(objects: list[dict], classes: list[str], image_size: np.ndarray) -> list[str]:
+    """Labels van 1 foto in YOLO-OBB-formaat: klasse en 4 hoekpunten, als deel van de foto."""
+    lines = []
+    for obj in objects:
+        if obj["class"] == IGNORE:
+            continue
+        boxes = [obj, head_box(obj)]
+        for box in boxes:
+            if box is None:
+                continue
+            corners = np.clip(to_corners(box) / image_size, 0, 1).flatten()
+            numbers = " ".join(f"{v:.6f}" for v in corners)
+            lines.append(f"{classes.index(box['class'])} {numbers}")
+    return lines
+
 
 def link(src: Path, dst: Path) -> None:
+    """Maak een snelkoppeling naar de foto (scheelt kopieren)."""
     dst.parent.mkdir(parents=True, exist_ok=True)
     dst.symlink_to(src.resolve())
 
 
 def export_yolo(split: dict, out: Path, classes: list[str]) -> None:
+    """Schrijf data/yolo: foto's, labels en data.yaml."""
     shutil.rmtree(out, ignore_errors=True)
     for name, stems in split.items():
         for stem in stems:
             ann = load_label(stem)
             link(IMAGES / ann["image"], out / "images" / name / ann["image"])
             size = np.array([ann["width"], ann["height"]])
-            lines = []
-            for o in ann["objects"]:
-                if o["class"] != IGNORE:
-                    pts = np.clip(to_corners(o) / size, 0, 1).flatten()
-                    lines.append(" ".join([str(classes.index(o["class"]))] + [f"{v:.6f}" for v in pts]))
             label = out / "labels" / name / f"{stem}.txt"
             label.parent.mkdir(parents=True, exist_ok=True)
-            label.write_text("\n".join(lines) + "\n")
-    config = {"path": str(out.resolve()), "train": "images/train", "val": "images/val",
-              "test": "images/test", "names": dict(enumerate(classes))}  # fmt: skip
+            label.write_text("\n".join(label_lines(ann["objects"], classes, size)) + "\n")
+    config = {
+        "path": str(out.resolve()),
+        "train": "images/train",
+        "val": "images/val",
+        "test": "images/test",
+        "names": dict(enumerate(classes)),
+    }
     (out / "data.yaml").write_text(yaml.safe_dump(config, sort_keys=False, allow_unicode=True))
 
 
-def keypoints(o: dict, width: int, height: int) -> list[float]:
-    """Koppunt, dan de 4 hoeken (voor de OBB-kop); punten buiten beeld krijgen zichtbaarheid 0."""
-    points = [o.get("head")] + to_corners(o).tolist()
-    out: list[float] = []
-    for p in points:
-        visible = p is not None and 0 <= p[0] < width and 0 <= p[1] < height
-        out += [float(p[0]), float(p[1]), 2] if visible else [0.0, 0.0, 0]
-    return out
-
-
-def export_coco(split: dict, out: Path, classes: list[str]) -> None:
-    shutil.rmtree(out, ignore_errors=True)
-    categories = [{"id": i, "name": c, "supercategory": "onderdeel"} for i, c in enumerate(classes)]
-    for name, stems in split.items():
-        folder = out / ("valid" if name == "val" else name)
-        coco = {"images": [], "annotations": [], "categories": categories}
-        for image_id, stem in enumerate(stems):
-            ann = load_label(stem)
-            width, height = ann["width"], ann["height"]
-            link(IMAGES / ann["image"], folder / ann["image"])
-            coco["images"].append(
-                {"id": image_id, "file_name": ann["image"], "width": width, "height": height}
-            )
-            for o in ann["objects"]:
-                if o["class"] == IGNORE:
-                    continue
-                pts = np.clip(to_corners(o), [0, 0], [width - 1, height - 1])
-                x0, y0 = pts.min(0)
-                x1, y1 = pts.max(0)
-                kps = keypoints(o, width, height)
-                coco["annotations"].append(
-                    {
-                        "id": len(coco["annotations"]),
-                        "image_id": image_id,
-                        "category_id": classes.index(o["class"]),
-                        "bbox": [float(x0), float(y0), float(x1 - x0), float(y1 - y0)],
-                        "area": float((x1 - x0) * (y1 - y0)),
-                        "segmentation": [[float(v) for v in pts.flatten()]],
-                        "iscrowd": 0,
-                        "keypoints": kps,
-                        "num_keypoints": sum(1 for v in kps[2::3] if v > 0),
-                    }
-                )
-        folder.mkdir(parents=True, exist_ok=True)
-        (folder / "_annotations.coco.json").write_text(json.dumps(coco))
-
-
 def main() -> None:
+    """Zet de labels om naar data/yolo."""
     ap = argparse.ArgumentParser()
     ap.add_argument("--split", type=Path, default=SPLIT)
-    ap.add_argument("--out", type=Path, default=ROOT / "data")
     args = ap.parse_args()
-    classes, split = load_classes(), load_split(args.split)
-    export_yolo(split, args.out / "yolo", classes)
-    export_coco(split, args.out / "coco", classes)
-    print({name: len(stems) for name, stems in split.items()}, "->", args.out / "yolo", args.out / "coco")
+    split = load_split(args.split)
+    export_yolo(split, ROOT / "data/yolo", load_classes() + [HEAD])
+    print({name: len(stems) for name, stems in split.items()}, "->", ROOT / "data/yolo")
 
 
 if __name__ == "__main__":
