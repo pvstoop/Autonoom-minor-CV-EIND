@@ -69,16 +69,17 @@ def draw_head(img, o: dict, color: tuple) -> None:
 
 
 def draw_name(img, o: dict, color: tuple) -> None:
-    """Klassenaam in het midden, met een witte rand zodat hij overal leesbaar is."""
+    """Klassenaam (met de maat als die er is) in het midden, met een witte rand eromheen."""
     x, y = o["center"]
     org = (int(x) - 30, int(y) + 8)
+    text = f"{o['class']} {o['maat']}" if "maat" in o else o["class"]
     font = cv2.FONT_HERSHEY_SIMPLEX
-    cv2.putText(img, o["class"], org, font, 0.8, (255, 255, 255), 5)
-    cv2.putText(img, o["class"], org, font, 0.8, color, 2)
+    cv2.putText(img, text, org, font, 0.8, (255, 255, 255), 5)
+    cv2.putText(img, text, org, font, 0.8, color, 2)
 
 
 def draw(img, objects: list[dict], classes: list[str]):
-    """Teken per object de box, de kop (als die er is) en de klassenaam."""
+    """Teken per object de box, de kop (als die er is) en de klassenaam met maat."""
     out = img.copy()
     for o in objects:
         color = color_of(o["class"], classes)

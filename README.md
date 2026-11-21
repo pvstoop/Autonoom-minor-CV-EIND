@@ -1,7 +1,7 @@
 # CV-EIND: onderdelen detecteren met YOLO-OBB
 
 Zoekt 8 soorten onderdelen in een foto: waar ligt het (geroteerde box), hoe ligt het (hoek, en bij bouten aan welke
-kant de kop zit) en wat is het. Met YOLO11-OBB.
+kant de kop zit), wat is het en welke maat (bijvoorbeeld kleine of grote ring). Met YOLO11-OBB.
 
 Wat ik heb geprobeerd en wat eruit kwam staat in [docs/experimenten.md](docs/experimenten.md).
 Welke foto's er zijn en hoe ze verdeeld zijn staat in [docs/dataset.md](docs/dataset.md).
@@ -28,17 +28,20 @@ uv run python scripts/evaluate.py runs/yolo/m/weights/best.pt
 | `data/images/` | 75 foto's: 19 op een egale ondergrond (`ps_...`), 56 op een dambord (`board_...`) |
 | `data/labels/` | Eén JSON-bestand per foto |
 | `data/split.yaml` | Welke foto in train, val of test zit: 31, 7 en 37 |
+| `data/maten.yaml` | Welke klassen 2 maten hebben en waar de grens ligt (gemaakt door `sizes.py`) |
 | `models/` | Het getrainde model |
 | `classes.txt` | De 8 klassen |
-| `scripts/` | Data klaarzetten, trainen, testen, labels tekenen en de grafieken maken |
+| `scripts/` | Data klaarzetten, trainen, testen, maten zoeken, labels tekenen en de grafieken maken |
 | `results/` | De cijfers achter de grafieken in docs/experimenten.md |
 
 ## Hoe het werkt
 
 - `prepare_data.py` zet de labels om naar YOLO. Bij elke bout en koppeling komt een kleine box `kop` op de kop, als 9e klasse.
 - `train_yolo.py` traint YOLO11-OBB, met draaien, spiegelen, schalen, helderheid en kleur als augmentatie.
+- `sizes.py` zoekt welke klassen 2 maten hebben: de lengte gedeeld door de moer op dezelfde foto, in 2 groepen
+  verdeeld. De grenzen komen in `data/maten.yaml`.
 - `evaluate.py` voorspelt de testfoto's (met `--val` de val-foto's), koppelt elke gevonden kop aan het dichtstbijzijnde
-  uiteinde van een bout of koppeling, en print mAP50, F1, de hoekfout en hoe vaak de kop goed zit, apart voor de egale ondergrond en het
+  uiteinde van een bout of koppeling, zet de maat erbij, en print mAP50, F1, de hoekfout en hoe vaak de kop en de maat goed zijn, apart voor de egale ondergrond en het
   dambord. Kies instellingen op val, en gebruik test alleen voor het eindcijfer.
 
 ## Labels
@@ -68,4 +71,5 @@ Bekijk labels met `uv run python scripts/show.py board_IMG_6241` (tekening in ru
 | Egale ondergrond | 94.6 ± 1.5 | 95.7 | 96% |
 | Dambord, nieuwe opstellingen | 86.8 ± 0.7 | 89.2 | 95% |
 
-Het model in `models/` is 1 van die 3 keer: 96.3 op de egale ondergrond en 86.1 op het dambord.
+Het model in `models/` is 1 van die 3 keer: 96.3 op de egale ondergrond en 86.1 op het dambord. De maat is daarbij
+100% goed op de egale ondergrond en 92% op het dambord.

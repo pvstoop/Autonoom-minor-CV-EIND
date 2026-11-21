@@ -18,6 +18,29 @@ Een geroteerde box zegt niet aan welke kant de kop zit: een bout op 30 graden is
 krijgt YOLO een 9e klasse `kop`, een kleine box op de kop. Na het voorspellen kijk ik per bout welk uiteinde het dichtst
 bij een gevonden kop ligt. Dat is de kop. Dit kost geen extra model en, zo bleek, ook geen score.
 
+## Maten
+
+Sommige klassen hebben 2 maten: kleine en grote ringen, korte en lange bouten. YOLO kent alleen de klasse, dus de maat
+haal ik uit de lengte van de box, zonder opnieuw te trainen. Pixels zeggen niks, want de camera hangt niet steeds even
+hoog (een moer is 94 tot 190 pixels). Daarom deel ik de lengte door die van de moer op dezelfde foto: de moeren zijn
+allemaal even groot.
+
+`sizes.py` verdeelt per klasse de lengtes in 2 groepen, met zo min mogelijk spreiding per groep (zoals Otsu). Dat doe ik
+op de train- en val-foto's van de egale ondergrond, omdat daar staat welke onderdelen niet helemaal zichtbaar zijn.
+Dezelfde maat schommelt tot 1.25 keer door perspectief, dus pas vanaf 1.4 keer verschil tel ik het als 2 maten.
+
+| Klasse | Groep 1 | Groep 2 | Verschil | Uitkomst |
+|---|---|---|---|---|
+| zeskantbout | 1.65 | 3.89 | 2.35x | kort en lang |
+| slotbout | 3.38 | 6.55 | 1.94x | kort en lang |
+| insteekkoppeling | 0.87 | 1.31 | 1.52x | klein en groot |
+| ring | 1.09 | 1.55 | 1.43x | klein en groot |
+| inbusbout | 1.97 | 2.45 | 1.24x | 1 maat |
+| koppelbus | 1.54 | 1.85 | 1.20x | 1 maat |
+| knopschroef | 1.66 | 1.86 | 1.12x | 1 maat |
+
+(Groep 1 en 2: de lengte als deel van de moer.)
+
 ## Resultaat
 
 Het model in `models/yolo11m_obb.pt` (YOLO11m, 1024 px), op de testset. Gemiddeld over 3 keer trainen:
@@ -29,6 +52,20 @@ Het model in `models/yolo11m_obb.pt` (YOLO11m, 1024 px), op de testset. Gemiddel
 
 Het model in `models/` is 1 van die 3 keer: 96.3 op de egale ondergrond en 86.1 op het dambord. Toen opstelling C nog in train
 zat (5 foto's meer om van te leren) haalde de basis 95.8 en 87.9, ongeveer 1 punt boven het gemiddelde.
+
+Krijgt een gevonden onderdeel dezelfde maat als het label? Met het model in `models/`:
+
+| Klasse | Egale ondergrond | Dambord |
+|---|---|---|
+| ring | 22 van 22 | 181 van 210 (86%) |
+| zeskantbout | 20 van 20 | 110 van 113 (97%) |
+| slotbout | 6 van 6 | 20 van 22 (91%) |
+| insteekkoppeling | 19 van 19 | 144 van 147 (98%) |
+| samen | 67 van 67 | 455 van 492 (92%) |
+
+De ring is het lastigst: kleine en grote ringen schelen maar 1.43 keer, dus een iets te grote of te kleine box zet hem
+al aan de verkeerde kant van de grens. Er moet ook een moer op de foto liggen. En dit meet of voorspelling en label het
+eens zijn, niet of de maat echt klopt: nergens is gelabeld welke maat een onderdeel heeft.
 
 ## Hoe ik gekozen heb
 

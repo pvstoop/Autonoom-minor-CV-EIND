@@ -10,6 +10,7 @@ Scores:
     F1       bij de beste drempel, juiste klasse vereist
     hoekfout mediaan in graden, alleen voor langwerpige onderdelen
     kop goed hoe vaak de kop aan de goede kant zit (als het model de klasse `kop` kent)
+    maat     hoe vaak klein/groot of kort/lang gelijk is aan het label (zie sizes.py)
 
 Een voorspelling hoort bij een label als de geroteerde boxen minstens 50% overlappen (IoU >= 0.5).
 """
@@ -22,6 +23,7 @@ import cv2
 import numpy as np
 from common import IGNORE, IMAGES, ROOT, SPLIT, draw, iou, load_classes, load_label, load_split
 from scipy.optimize import linear_sum_assignment
+from sizes import add_sizes, load_sizes
 from ultralytics import YOLO
 
 SAVE_CONF = 0.01  # lage drempel: mAP heeft ook de onzekere voorspellingen nodig
@@ -169,14 +171,22 @@ def angle_error(pred: dict, label: dict) -> float:
     return min(diff, 180 - diff)
 
 
+def both_sized(pred: dict, label: dict) -> bool:
+    """Telt mee voor de maat: allebei een maat, dezelfde klasse en het label helemaal zichtbaar."""
+    if "maat" not in pred or "maat" not in label:
+        return False
+    return pred["class"] == label["class"] and not label.get("occluded")
+
+
 def report(name: str, preds: dict, gts: dict, classes: list[str]) -> None:
-    """Print mAP50, F1, hoekfout en kop voor deze foto's."""
+    """Print mAP50, F1, hoekfout, kop en maat voor deze foto's."""
     aps = {c: class_ap(preds, gts, c) for c in classes}
     scored = {c: v for c, v in aps.items() if v is not None}
     f1, conf = best_f1(preds, gts)
     pairs = matched(preds, gts)
     long_pairs = [(p, g) for p, g in pairs if max(g["size"]) >= LONG * min(g["size"])]
     with_head = [(p, g) for p, g in pairs if "head" in p and "head" in g]
+    with_size = [(p, g) for p, g in pairs if both_sized(p, g)]
 
     n = sum(len(v) for v in gts.values())
     print(f"\n{name}: {len(gts)} foto's, {n} objecten")
@@ -189,6 +199,9 @@ def report(name: str, preds: dict, gts: dict, classes: list[str]) -> None:
     if with_head:
         good = [abs((p["angle"] - g["angle"] + 180) % 360 - 180) < 90 for p, g in with_head]
         print(f"  kop goed: {sum(good)} van {len(good)} ({100 * np.mean(good):.1f}%)")
+    if with_size:
+        good = [p["maat"] == g["maat"] for p, g in with_size]
+        print(f"  maat goed: {sum(good)} van {len(good)} ({100 * np.mean(good):.1f}%)")
 
 
 def main() -> None:
@@ -203,6 +216,7 @@ def main() -> None:
     part = "val" if args.val else "test"
 
     classes = load_classes()
+    borders = load_sizes()
     stems = load_split(args.split)[part]
     preds = predict(args.weights, [IMAGES / f"{s}.jpg" for s in stems])
 
@@ -221,6 +235,8 @@ def main() -> None:
         parts = [d for d in preds[stem] if d["class"] != HEAD]
         preds[stem] = [d for d in parts if all(iou(d, o) < 0.3 for o in ignored)]
         add_heads(preds[stem], heads)
+        add_sizes(preds[stem], borders)  # klein/groot of kort/lang
+        add_sizes(gts[stem], borders)
 
         (out / f"{stem}.json").write_text(json.dumps({"objects": preds[stem]}, indent=1))
         shown = [d for d in preds[stem] if d["confidence"] >= SURE]
