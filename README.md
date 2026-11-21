@@ -23,7 +23,7 @@ uv run python scripts/train_yolo.py --name m --model yolo11m-obb.pt
 uv run python scripts/evaluate.py runs/yolo/m/weights/best.pt
 ```
 
-| Path | Inhoud |
+| Pad | Inhoud |
 |---|---|
 | `data/images/` | 75 foto's: 19 op een egale ondergrond (`ps_...`), 56 op een dambord (`board_...`) |
 | `data/labels/` | Eén JSON-bestand per foto |
@@ -31,17 +31,17 @@ uv run python scripts/evaluate.py runs/yolo/m/weights/best.pt
 | `models/` | Het getrainde model |
 | `classes.txt` | De 8 klassen |
 | `scripts/` | Data klaarzetten, trainen, testen, labels tekenen en de grafieken maken |
-| `results/` | De cijfers achter de grafieken in het logboek |
+| `results/` | De cijfers achter de grafieken in docs/experimenten.md |
 
-Hoe het werkt
+## Hoe het werkt
 
 - `prepare_data.py` zet de labels om naar YOLO. Bij elke bout en koppeling komt een kleine box `kop` op de kop, als 9e klasse.
-- `train_yolo.py` traint YOLO11-OBB, met draaien, spiegelen, helderheid en kleur als augmentatie.
+- `train_yolo.py` traint YOLO11-OBB, met draaien, spiegelen, schalen, helderheid en kleur als augmentatie.
 - `evaluate.py` voorspelt de testfoto's (met `--val` de val-foto's), koppelt elke gevonden kop aan het dichtstbijzijnde
-  uiteinde van een bout, en print mAP50, F1, de hoekfout en hoe vaak de kop goed zit, apart voor de egale ondergrond en het
+  uiteinde van een bout of koppeling, en print mAP50, F1, de hoekfout en hoe vaak de kop goed zit, apart voor de egale ondergrond en het
   dambord. Kies instellingen op val, en gebruik test alleen voor het eindcijfer.
 
-Labels
+## Labels
 
 ```json
 {"class": "zeskantbout", "shape": "obb", "center": [751.0, 322.0], "size": [203.7, 42.0], "angle": 13.6, "head": [652.0, 298.0]}
@@ -53,15 +53,15 @@ Labels
 - occluded: true betekent dat het onderdeel niet helemaal zichtbaar is.
 - _negeer is geen klasse maar een gebied dat niet meetelt, bijvoorbeeld een onderdeel dat te ver bedekt is om te herkennen.
 
-Zie labels met `uv run python scripts/show.py board_IMG_6241` (tekening in runs/labels/).
+Bekijk labels met `uv run python scripts/show.py board_IMG_6241` (tekening in runs/labels/).
 
-Foto's toevoegen
+## Foto's toevoegen
 
 1. Zet de foto in data/images/ en het label in data/labels/, met dezelfde naam.
 2. Zet de naam in data/split.yaml. Foto's van dezelfde opstelling horen in dezelfde groep.
 3. Draai prepare_data.py opnieuw en train opnieuw.
 
-Resultaat (testset, gemiddeld over 3 keer trainen)
+## Resultaat (testset, gemiddeld over 3 keer trainen)
 
 | | mAP50 | F1 | Kop goed |
 |---|---|---|---|

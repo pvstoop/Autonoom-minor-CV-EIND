@@ -81,7 +81,7 @@ def plot_resolution() -> None:
     ax.set_xticks(xs)
     ax.set_ylim(90, 100)
     ax.yaxis.grid(True, color=GRID)
-    style(ax, xlabel="invoerresolutie (pixels; de foto's zelf zijn 2048 x 1536)", ylabel="mAP50")
+    style(ax, xlabel="invoerresolutie (pixels; de foto's zelf zijn 1536 x 2048)", ylabel="mAP50")
     ax.set_title("Meer pixels helpt niet", loc="left", color=INK)
     save(fig, "resolutie")
 

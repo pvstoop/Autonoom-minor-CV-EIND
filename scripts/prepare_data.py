@@ -53,7 +53,7 @@ def label_lines(objects: list[dict], classes: list[str], image_size: np.ndarray)
 
 
 def link(src: Path, dst: Path) -> None:
-    """Maak een snelkoppeling naar de foto (scheelt kopieren)."""
+    """Maak een snelkoppeling naar de foto (scheelt kopiëren)."""
     dst.parent.mkdir(parents=True, exist_ok=True)
     dst.symlink_to(src.resolve())
 

@@ -227,7 +227,7 @@ def main() -> None:
         drawing = draw(cv2.imread(str(IMAGES / f"{stem}.jpg")), shown, classes)
         cv2.imwrite(str(out / f"{stem}.jpg"), drawing)
 
-    for title, prefix in (("Egale ondergrond", "ps_"), ("Dambordfoto's", "board_")):
+    for title, prefix in (("Egale ondergrond", "ps_"), ("Dambord", "board_")):
         subset = [s for s in stems if s.startswith(prefix)]
         if subset:
             report(title, {s: preds[s] for s in subset}, {s: gts[s] for s in subset}, classes)

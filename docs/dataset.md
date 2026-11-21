@@ -41,9 +41,11 @@ anders neergelegd, en daarvan een paar foto's.
 ## Labels
 
 Per foto een JSON-bestand in `data/labels/`. Per onderdeel een geroteerde box (midden, lengte en breedte, hoek), en bij
-bouten en koppelingen ook waar de kop zit. De foto's zijn in CVAT gelabeld.
+bouten en koppelingen ook waar de kop zit. De foto's zijn in CVAT gelabeld; de dambordfoto's zijn eerst voorgelabeld met
+een al getraind model.
 
-- `occluded`: het onderdeel is niet helemaal zichtbaar. Dat geldt voor 184 van de 2134 onderdelen.
+- `occluded`: het onderdeel is niet helemaal zichtbaar. Dat geldt voor 184 van de 514 onderdelen op de egale ondergrond.
+  Op het dambord heb ik dit niet gelabeld.
 - `_negeer`: een gebied dat niet meetelt, bijvoorbeeld een onderdeel dat te ver bedekt is om te herkennen (31 keer, alleen op
   het dambord).
 

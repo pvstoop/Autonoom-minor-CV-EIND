@@ -1,5 +1,5 @@
 # Vaste verdeling. Dambordfoto's zijn op opstelling verdeeld: train, val en test delen nooit dezelfde opstelling.
-# train: eigen foto's + dambord A-B. val (om te kiezen): 2 eigen + dambord C. test (alleen voor het eindcijfer): 6 eigen + dambord D-E.
+# train: 11 egaal + dambord A-B. val (om te kiezen): 2 egaal + dambord C. test (alleen voor het eindcijfer): 6 egaal + dambord D, donker en E.
 train:
 - ps_iphone-16-pro_IMG_6003
 - ps_iphone-16-pro_IMG_6004

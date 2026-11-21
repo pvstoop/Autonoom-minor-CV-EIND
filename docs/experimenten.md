@@ -5,12 +5,12 @@ model) en werkt stabiel. Hieronder wat ik heb geprobeerd en wat eruit kwam.
 
 ## Data en labels
 
-- 19 foto's op een egale ondergrond en 56 foto's op een dambord, in 6 opstellingen. Overal dezelfde 29 onderdelen.
+- 19 foto's op een egale ondergrond en 56 foto's op een dambord, in 6 opstellingen. Steeds dezelfde onderdelen uit de zak.
 - De foto's op de egale ondergrond heb ik gelabeld in CVAT met geroteerde boxen. Bij bouten en koppelingen zet ik ook een punt `kop` bij
   de kop. Een script zet dat om naar het uiteinde van de box, zodat de hoek van de kop naar de punt wijst.
-- De dambordlabels zijn met hulp van een al getraind model gemaakt boxes waren geprelabeld.
+- De dambordlabels zijn voorgelabeld met een al getraind model.
 - `data/split.yaml`: train 11 egaal + 20 dambord (opstellingen A-B), val 2 egaal + 5 dambord (opstelling C), test 6 egaal
-  + 31 dambord (opstellingen D-E). Train, val en test delen nooit een dambord-opstelling.
+  + 31 dambord (opstellingen D, donker en E). Train, val en test delen nooit een dambord-opstelling.
 
 ## Kop als klasse
 
@@ -28,11 +28,11 @@ Het model in `models/yolo11m_obb.pt` (YOLO11m, 1024 px), op de testset. Gemiddel
 | Dambord, nieuwe opstellingen | 86.8 ± 0.7 | 89.2 | 95% | 2.3 graden |
 
 Het model in `models/` is 1 van die 3 keer: 96.3 op de egale ondergrond en 86.1 op het dambord. Toen opstelling C nog in train
-zat (5 foto's meer om van te leren) was het ongeveer 1 punt hoger: 95.8 en 87.9.
+zat (5 foto's meer om van te leren) haalde de basis 95.8 en 87.9, ongeveer 1 punt boven het gemiddelde.
 
 ## Hoe ik gekozen heb
 
-Alle keuzes heb ik gemaakt op de val-set (7 foto's). De testset heb ik pas aan het eind 1 keer gebruikt. Kiezen op testset maakt eindresultaat mooier dan het is.
+Alle keuzes heb ik gemaakt op de val-set (7 foto's). De testset heb ik pas aan het eind 1 keer gebruikt. Kiezen op de testset maakt het eindresultaat mooier dan het is.
 
 Eerst heb ik hetzelfde model 3 keer getraind: 96.5, 97.4 en 98.4 mAP50. Een verschil kleiner dan ongeveer 2 punten zegt
 dus niks.
@@ -47,14 +47,14 @@ Steeds 1 ding anders dan de basis (YOLO11m, 1024 px, 200 epochs, met augmentatie
 - Augmentatie (draaien, spiegelen, schalen, helderheid) is nodig: zonder -6.
 - YOLO11m is de goede maat. Kleiner is slechter, groter levert niks op en is 2 keer zo traag.
 - De kop-klasse kost niks.
-- Verder geprobeerd, allemaal binnen de ruis: een andere optimizer en learning rate, meer epochs, mosaic, mixup en
-  perspective.
+- Verder geprobeerd, allemaal binnen de ruis: meer epochs, mosaic, mixup 0.2, perspective en een cosine learning rate.
+  SGD (87.0) en een lagere learning rate (93.8) waren slechter.
 
 ## Meer pixels helpt niet
 
-Dit vond ik het verrassendst. De onderdelen zijn soms klein en de foto's zijn 2048 x 1536, dus ik verwachtte dat een
-hogere resolutie zou helpen. Dat deed het niet: 768 px is even goed als 1024 en 1280, en traint 1,6 keer zo snel. Pas
-bij 640 gaat het mis, omdat de kop-boxen dan te klein worden.
+Dit vond ik het verrassendst. De onderdelen zijn soms klein en de foto's zijn 1536 x 2048, dus ik verwachtte dat een
+hogere resolutie zou helpen. Dat deed het niet: 768 px is even goed als 1024 en 1280, en traint 1.6 keer zo snel. Bij
+640 is het iets lager (96.0), net binnen de ruis.
 
 ![resolutie](img/resolutie.png)
 
@@ -71,6 +71,6 @@ standaardinstellingen.
 
 ## Wat ik nog zou doen
 
-- Een grotere val-set, met donkere en egale foto's, of de folds gebruiken, zodat kleine verschillen wel te zien zijn.
-- Meer foto's op de egale ondergrond: de score steeg nog toen ik van 9 naar 13 trainfoto's ging.
+- Een grotere val-set, met donkere en egale foto's, of kruisvalidatie (folds), zodat kleine verschillen wel te zien zijn.
+- Meer foto's op de egale ondergrond: met meer trainfoto's steeg de score nog.
 - Foto's van andere onderdelen. Nu zijn het steeds dezelfde 29, dus de scores zeggen niks over nieuwe onderdelen.
