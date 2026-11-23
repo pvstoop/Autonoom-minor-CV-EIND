@@ -77,9 +77,20 @@ Het model in `models/` is 1 van die 3 keer: 96.3 op de egale ondergrond en 86.1 
 
 
 
-### Klassieke baseline (`scripts/classical_pipeline.py`)
+## Klassieke CV (`scripts/classical_pipeline.py`)
 
-Naast YOLO11-OBB is er een klassieke CV-pipeline getest met OpenCV-drempelwaarden, contouren, 11 vorm-/kleurkenmerken en een Random Forest:
+OpenCV pakt de onderdelen eruit (adaptive threshold op egale achtergrond; HSV, grijswaarden en een ROI-masker op het dambord) en een Random Forest kijkt naar 11 kenmerken zoals vorm, hoekpunten, vulling en richting van de boutkop.
 
-- **Scripts:** `scripts/classical_pipeline.py`, `scripts/train_classical.py` en `scripts/evaluate_classical.py`.
-- **Resultaten en testrondes:** `results/klassiek/` (`varianten_vergelijking.csv`, `kernresultaten.csv`, `voorspellingen.csv`) en `results/klassiek/voorbeelden/1e_editie` t/m `6e_editie`.
+| Variant | mAP@50 | F1 | F1 egaal | F1 dambord | Boutkop | Tijd |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| Random Forest (11 kenmerken / close 5x5 / containment) | 6.3% | 6.1% | 35.0% | 1.3% | 45.5% (5/11) | 0.39s |
+| SVM (RBF-kernel op 11 kenmerken) | 2.3% | 6.4% | 33.5% | 1.8% | 38.5% (5/13) | 0.12s |
+| Random Forest zonder `approxPolyDP` hoekpunten | 6.2% | 6.4% | 35.4% | 1.4% | 50.0% (6/12) | 0.39s |
+| Random Forest zonder helderheid (`brightness`) | 6.1% | 6.3% | 34.6% | 1.6% | 41.7% (5/12) | 0.41s |
+| Zonder filter op binnengaten (containment) | 6.2% | 6.1% | 33.5% | 1.3% | 45.5% (5/11) | 0.38s |
+| Morfologie `MORPH_CLOSE` 3x3 i.p.v. 5x5 | 4.4% | 6.0% | 31.8% | 2.0% | 28.6% (4/14) | 0.38s |
+
+- `results/klassiek/varianten_vergelijking.csv`: alle varianten naast elkaar.
+- `results/klassiek/kernresultaten.csv`: korte samenvatting op de testset.
+- `results/klassiek/voorspellingen.csv`: losse detecties, scores en hoeken.
+- `results/klassiek/voorbeelden/1e_editie/` t/m `5e_editie/`: testfoto's per stap (`5e_editie` heeft NMS op gedraaide boxen tegen dubbele boxen op glans).
