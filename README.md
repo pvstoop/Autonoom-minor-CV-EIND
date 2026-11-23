@@ -73,3 +73,13 @@ Bekijk labels met `uv run python scripts/show.py board_IMG_6241` (tekening in ru
 
 Het model in `models/` is 1 van die 3 keer: 96.3 op de egale ondergrond en 86.1 op het dambord. De maat is daarbij
 100% goed op de egale ondergrond en 92% op het dambord.
+
+
+
+
+### Klassieke baseline (`scripts/classical_pipeline.py`)
+
+Naast YOLO11-OBB is er een klassieke CV-pipeline getest met OpenCV-drempelwaarden, contouren, 11 vorm-/kleurkenmerken en een Random Forest:
+
+- **Scripts:** `scripts/classical_pipeline.py`, `scripts/train_classical.py` en `scripts/evaluate_classical.py`.
+- **Resultaten en testrondes:** `results/klassiek/` (`varianten_vergelijking.csv`, `kernresultaten.csv`, `voorspellingen.csv`) en `results/klassiek/voorbeelden/1e_editie` t/m `6e_editie`.
