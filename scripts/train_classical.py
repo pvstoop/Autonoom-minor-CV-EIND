@@ -25,7 +25,6 @@ from classical_pipeline import (
 
 
 def find_image(images_dir: Path, name: str) -> Path | None:
-    """Zoekt het fotobestand op in data/images."""
     matches = list(images_dir.glob(f"{Path(name).stem}.*"))
     return matches[0] if matches else None
 
@@ -33,7 +32,7 @@ def find_image(images_dir: Path, name: str) -> Path | None:
 def collect_samples(
     image_names: list[str], images_dir: Path, labels_dir: Path, max_bg: int = 200
 ) -> tuple[np.ndarray, np.ndarray]:
-    """Haalt de 10 kenmerken op voor alle gelabelde onderdelen + achtergrondvoorbeelden."""
+    """Haalt de 11 kenmerken op voor gelabelde onderdelen en achtergrondvoorbeelden."""
     x_rows: list[np.ndarray] = []
     y_rows: list[str] = []
     bg_rows: list[np.ndarray] = []
@@ -56,7 +55,7 @@ def collect_samples(
             for obj in annots
         ]
 
-        # 1. Kenmerken meten op alle echte (gelabelde) onderdelen.
+        # Echte labels meenemen als positieve voorbeelden
         for obj in annots:
             feat, _ = extract_features(
                 img, tuple(obj["center"]), tuple(obj["size"]), float(obj["angle"])
@@ -65,7 +64,7 @@ def collect_samples(
                 x_rows.append(feat)
                 y_rows.append(str(obj["class"]))
 
-        # 2. Foute detecties (geen overlap met echte labels) bewaren als '_achtergrond'.
+        # Losse kandidaten zonder match met ground truth als achtergrond gebruiken
         is_board = img_path.name.startswith("board_")
         for center, size, angle in detect_candidates(img, is_board=is_board):
             cand_poly = rect_to_polygon(center, size, angle)
@@ -75,7 +74,7 @@ def collect_samples(
                 if feat is not None and np.all(np.isfinite(feat)):
                     bg_rows.append(feat)
 
-    # Beperk het aantal achtergrondvoorbeelden zodat die niet overheersen.
+    # Achtergrond beperken zodat het niet de overhand krijgt
     rng = np.random.default_rng(42)
     if len(bg_rows) > max_bg:
         idx = rng.choice(len(bg_rows), size=max_bg, replace=False)
@@ -88,7 +87,6 @@ def collect_samples(
 
 
 def main() -> None:
-    """Traint Random Forest en SVM, vergelijkt ze op val en slaat de beste op."""
     root = Path(__file__).resolve().parent.parent
     images_dir = root / "data" / "images"
     labels_dir = root / "data" / "labels"

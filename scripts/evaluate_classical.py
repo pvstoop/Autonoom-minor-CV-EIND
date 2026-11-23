@@ -1,4 +1,4 @@
-"""Test het getrainde model op de testset of een eigen map en bewaart CSV's in results/klassiek/."""
+"""Evaluatiescript voor het klassieke model op de testset of een eigen map."""
 
 from __future__ import annotations
 
@@ -24,7 +24,6 @@ from classical_pipeline import (
 
 
 def ap50_for_class(preds: list[dict], gts_by_img: dict[str, list[Polygon]]) -> float:
-    """Berekent Average Precision bij IoU >= 0.50 voor één klasse."""
     total_gt = sum(len(polys) for polys in gts_by_img.values())
     if total_gt == 0 or not preds:
         return 0.0
@@ -52,7 +51,6 @@ def ap50_for_class(preds: list[dict], gts_by_img: dict[str, list[Polygon]]) -> f
 
 
 def eval_subset(title: str, stems: set[str], preds: list[dict], gts: list[dict], min_conf: float) -> dict:
-    """Berekent en print mAP@50, Precision, Recall, F1 en boutkop-score voor een set foto's."""
     sub_preds = [p for p in preds if p["image"] in stems]
     sub_gts = [g for g in gts if g["image"] in stems]
     aps, tp_tot, fp_tot, kop_ok, kop_tot = [], 0, 0, 0, 0
@@ -108,7 +106,6 @@ def eval_subset(title: str, stems: set[str], preds: list[dict], gts: list[dict],
 
 
 def draw_result(image_bgr: np.ndarray, detections: list[dict]) -> np.ndarray:
-    """Tekent groene boxen, labels en een rode pijl naar de boutkop."""
     canvas = image_bgr.copy()
     for det in detections:
         box = np.int32(cv2.boxPoints(((det["cx"], det["cy"]), (det["w"], det["h"]), det["angle"])))
@@ -126,7 +123,6 @@ def draw_result(image_bgr: np.ndarray, detections: list[dict]) -> np.ndarray:
 
 
 def main() -> None:
-    """Draait de evaluatie op de testset of een eigen map en bewaart CSV en plaatjes."""
     root = Path(__file__).resolve().parent.parent
     images_dir, labels_dir = root / "data" / "images", root / "data" / "labels"
     klassiek_dir, vis_dir = root / "results" / "klassiek", root / "runs" / "classical_eval"
@@ -137,6 +133,7 @@ def main() -> None:
     clf, min_conf = bundle["model"], float(bundle.get("min_conf", 0.35))
     clf_classes = list(clf.classes_)
 
+    # Met een map als argument draait hij op losse testfoto's, anders op de testset uit split.yaml
     custom_dir = Path(sys.argv[1]) if len(sys.argv) > 1 else None
     if custom_dir is not None:
         image_paths = sorted(p for p in custom_dir.iterdir() if p.suffix.lower() in {".jpg", ".jpeg", ".png"})
@@ -193,12 +190,12 @@ def main() -> None:
         with (klassiek_dir / "varianten_vergelijking.csv").open("w", newline="", encoding="utf-8") as f:
             writer = csv.writer(f)
             writer.writerow(["variant", "beschrijving", "mAP50", "F1", "precision", "recall", "boutkop_goed", "boutkop_pct", "mAP50_egaal", "F1_egaal", "mAP50_dambord", "F1_dambord"])
-            writer.writerow(["basis_rf", "Random Forest (11 kenmerken, close 5x5, containment)", m_tot["mAP50"], m_tot["F1"], m_tot["precision"], m_tot["recall"], m_tot["boutkop_goed"], m_tot["boutkop_pct"], m_ps["mAP50"], m_ps["F1"], m_board["mAP50"], m_board["F1"]])
+            writer.writerow(["basis_rf", "Random Forest (11 kenmerken / close 5x5 / containment)", m_tot["mAP50"], m_tot["F1"], m_tot["precision"], m_tot["recall"], m_tot["boutkop_goed"], m_tot["boutkop_pct"], m_ps["mAP50"], m_ps["F1"], m_board["mAP50"], m_board["F1"]])
 
         with (klassiek_dir / "kernresultaten.csv").open("w", newline="", encoding="utf-8") as f:
             writer = csv.writer(f)
             writer.writerow(["methode", "mAP50", "F1", "F1_egaal", "F1_dambord"])
-            writer.writerow(["Random Forest (11 kenmerken, close 5x5, containment)", m_tot["mAP50"], m_tot["F1"], m_ps["F1"], m_board["F1"]])
+            writer.writerow(["Random Forest (11 kenmerken / close 5x5 / containment)", m_tot["mAP50"], m_tot["F1"], m_ps["F1"], m_board["F1"]])
 
     with (klassiek_dir / "voorspellingen.csv").open("w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
