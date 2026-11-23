@@ -93,4 +93,4 @@ OpenCV pakt de onderdelen eruit (adaptive threshold op egale achtergrond; HSV, g
 - `results/klassiek/varianten_vergelijking.csv`: alle varianten naast elkaar.
 - `results/klassiek/kernresultaten.csv`: korte samenvatting op de testset.
 - `results/klassiek/voorspellingen.csv`: losse detecties, scores en hoeken.
-- `results/klassiek/voorbeelden/1e_editie/` t/m `5e_editie/`: testfoto's per stap (`5e_editie` heeft NMS op gedraaide boxen tegen dubbele boxen op glans).
+- `results/klassiek/voorbeelden/1e_editie/` t/m `5e_editie/`: testfoto's per stap.
